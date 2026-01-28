@@ -1,0 +1,93 @@
+{
+  "mcpServers": {
+    "sql-server": {
+      "command": "python",
+      "args": ["-m", "src.cli", "--type", "sqlserver"],
+      "cwd": "/path/to/mcp-sql-paas-universal",
+      "env": {
+        "SQLSERVER_HOST": "your-server.database.windows.net",
+        "SQLSERVER_DATABASE": "your_database",
+        "SQLSERVER_USER": "mcp_readonly_user",
+        "SQLSERVER_PASSWORD": "your_password"
+      }
+    },
+    "azure-sql": {
+      "command": "python",
+      "args": ["-m", "src.cli", "--type", "azure"],
+      "cwd": "/path/to/mcp-sql-paas-universal",
+      "env": {
+        "AZURE_SQL_SERVER": "your-server",
+        "AZURE_SQL_DATABASE": "your_database",
+        "AZURE_SQL_AUTH_METHOD": "entra_id_service_principal",
+        "AZURE_SQL_TENANT_ID": "your_tenant_id",
+        "AZURE_SQL_CLIENT_ID": "your_client_id",
+        "AZURE_SQL_CLIENT_SECRET": "your_client_secret"
+      }
+    },
+    "snowflake": {
+      "command": "python",
+      "args": ["-m", "src.cli", "--type", "snowflake"],
+      "cwd": "/path/to/mcp-sql-paas-universal",
+      "env": {
+        "SNOWFLAKE_ACCOUNT_URL": "https://your-org-your-account.snowflakecomputing.com",
+        "SNOWFLAKE_ACCOUNT": "your-account",
+        "SNOWFLAKE_USER": "mcp_service_user",
+        "SNOWFLAKE_PASSWORD": "your_password",
+        "SNOWFLAKE_WAREHOUSE": "MCP_WAREHOUSE",
+        "SNOWFLAKE_DATABASE": "your_database",
+        "SNOWFLAKE_ROLE": "MCP_DEMO_ROLE"
+      }
+    },
+    "sap-hana": {
+      "command": "python",
+      "args": ["-m", "src.cli", "--type", "hana"],
+      "cwd": "/path/to/mcp-sql-paas-universal",
+      "env": {
+        "HANA_HOST": "your-hana-host",
+        "HANA_PORT": "30015",
+        "HANA_USER": "mcp_readonly_user",
+        "HANA_PASSWORD": "your_password",
+        "HANA_CONNECTION_TYPE": "single"
+      }
+    },
+    "postgresql": {
+      "command": "python",
+      "args": ["-m", "src.cli", "--type", "postgres"],
+      "cwd": "/path/to/mcp-sql-paas-universal",
+      "env": {
+        "POSTGRES_HOST": "your-postgres-host",
+        "POSTGRES_DATABASE": "your_database",
+        "POSTGRES_USER": "mcp_readonly_user",
+        "POSTGRES_PASSWORD": "your_password"
+      }
+    },
+    "dynamics365": {
+      "command": "python",
+      "args": ["-m", "src.cli", "--type", "dynamics365"],
+      "cwd": "/path/to/mcp-sql-paas-universal",
+      "env": {
+        "DYNAMICS365_SQL_SERVER": "your-dynamics-sql-server",
+        "DYNAMICS365_SQL_DATABASE": "your_database",
+        "DYNAMICS365_TENANT_ID": "your_tenant_id",
+        "DYNAMICS365_CLIENT_ID": "your_client_id",
+        "DYNAMICS365_CLIENT_SECRET": "your_client_secret",
+        "DYNAMICS365_ENVIRONMENT_URL": "https://your-org.crm.dynamics.com"
+      }
+    },
+    "sap-s4hana": {
+      "command": "python",
+      "args": ["-m", "src.cli", "--type", "sap_s4hana"],
+      "cwd": "/path/to/mcp-sql-paas-universal",
+      "env": {
+        "SAP_S4HANA_HOST": "your-hana-host",
+        "SAP_S4HANA_PORT": "30015",
+        "SAP_S4HANA_USER": "mcp_readonly_user",
+        "SAP_S4HANA_PASSWORD": "your_password",
+        "SAP_S4HANA_DATABASE": "your_tenant_db",
+        "SAP_S4HANA_INSTANCE": "00",
+        "SAP_S4HANA_SYSTEM_ID": "S4H",
+        "SAP_S4HANA_CLIENT": "100"
+      }
+    }
+  }
+}
