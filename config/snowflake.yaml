@@ -1,0 +1,87 @@
+# =============================================================================
+# Snowflake MCP Configuration
+# =============================================================================
+# Configuration for Snowflake MCP server
+# Follows Snowflake-managed MCP server best practices
+# =============================================================================
+
+server:
+  name: mcp-snowflake
+  timeout_seconds: 120
+  pool_size: 10
+  read_only: true
+
+connection:
+  # Account settings
+  account_url: ${SNOWFLAKE_ACCOUNT_URL}
+  account: ${SNOWFLAKE_ACCOUNT}
+  
+  # Warehouse and database
+  warehouse: ${SNOWFLAKE_WAREHOUSE}
+  database: ${SNOWFLAKE_DATABASE}
+  schema: ${SNOWFLAKE_SCHEMA:PUBLIC}
+  
+  # Role for access control (use dedicated role with minimal privileges)
+  role: ${SNOWFLAKE_ROLE:PUBLIC}
+  
+  # Authentication method: 'password', 'pat', 'oauth', 'keypair'
+  auth_method: ${SNOWFLAKE_AUTH_METHOD:password}
+  
+  user: ${SNOWFLAKE_USER}
+  # password: ${SNOWFLAKE_PASSWORD}  # Via env var
+  # pat_token: ${SNOWFLAKE_PAT}      # For PAT auth
+  
+  # OAuth settings (if using OAuth)
+  # oauth:
+  #   client_id: ${SNOWFLAKE_OAUTH_CLIENT_ID}
+  #   client_secret: ${SNOWFLAKE_OAUTH_CLIENT_SECRET}
+  #   redirect_uri: ${SNOWFLAKE_OAUTH_REDIRECT_URI}
+  
+  # Key pair settings (if using key pair auth)
+  # keypair:
+  #   private_key_path: /path/to/private_key.pem
+  #   passphrase: ${SNOWFLAKE_PRIVATE_KEY_PASSPHRASE}
+
+  connection_timeout: 30
+  query_timeout: 120
+
+security:
+  # Network policy - restrict to specific IPs
+  allowed_ips:
+    - ${SNOWFLAKE_ALLOWED_IPS}
+  
+  blocked_keywords:
+    - DROP
+    - DELETE
+    - UPDATE
+    - INSERT
+    - ALTER
+    - CREATE
+    - TRUNCATE
+  
+  sensitive_columns:
+    - password
+    - secret
+    - token
+    - ssn
+    - credit_card
+
+  max_query_length: 10000
+  max_rows: 10000
+
+logging:
+  level: INFO
+  file: /var/log/mcp/snowflake.log
+  console: true
+  audit_queries: true
+
+# Snowflake-specific features
+features:
+  # Enable time travel queries
+  time_travel: true
+  
+  # Enable query history access
+  query_history: true
+  
+  # Enable warehouse status monitoring
+  warehouse_monitoring: true
