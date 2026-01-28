@@ -1,0 +1,76 @@
+# =============================================================================
+# SQL Server MCP Configuration
+# =============================================================================
+# Configuration file for SQL Server MCP server
+# Override settings via environment variables prefixed with SQLSERVER_
+# =============================================================================
+
+server:
+  name: mcp-sqlserver
+  mode: database           # 'database' (single DB) or 'server' (multi-DB)
+  timeout_seconds: 120     # Tool call timeout (90-120 recommended)
+  pool_size: 10           # Connection pool size (5-20 recommended)
+  read_only: true         # Enforce read-only operations (recommended)
+
+connection:
+  host: ${SQLSERVER_HOST:localhost}
+  port: ${SQLSERVER_PORT:1433}
+  database: ${SQLSERVER_DATABASE:master}
+  user: ${SQLSERVER_USER}
+  # Password should be provided via environment variable
+  # password: ${SQLSERVER_PASSWORD}
+
+security:
+  encrypt: true
+  trust_server_certificate: false
+  use_read_replica: true   # Use read replica if available
+  
+  # Query restrictions (recommended for AI access)
+  blocked_keywords:
+    - DROP
+    - DELETE  
+    - UPDATE
+    - INSERT
+    - ALTER
+    - CREATE
+    - TRUNCATE
+    - EXEC
+    - xp_
+    - sp_
+  
+  # Sensitive columns to mask in results
+  sensitive_columns:
+    - password
+    - pwd
+    - secret
+    - token
+    - api_key
+    - ssn
+    - credit_card
+
+  # Maximum query length
+  max_query_length: 10000
+  
+  # Maximum rows to return
+  max_rows: 10000
+
+logging:
+  level: INFO
+  file: /var/log/mcp/sqlserver.log
+  console: true
+  audit_queries: true
+
+# Schema restrictions (optional)
+# Uncomment to restrict access to specific schemas
+# schemas:
+#   allowed:
+#     - dbo
+#     - reporting
+#   default: dbo
+
+# Table restrictions (optional)
+# Uncomment to block specific tables
+# tables:
+#   blocked:
+#     - sys_users
+#     - audit_log
