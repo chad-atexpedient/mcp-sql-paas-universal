@@ -1,0 +1,39 @@
+{
+  "servers": {
+    "sql-server-mcp": {
+      "url": "http://localhost:8001",
+      "headers": {
+        "Authorization": "Bearer ${MCP_API_KEY}"
+      },
+      "description": "SQL Server MCP Server for database queries"
+    },
+    "azure-sql-mcp": {
+      "url": "http://localhost:8002",
+      "headers": {
+        "Authorization": "Bearer ${MCP_API_KEY}"
+      },
+      "description": "Azure SQL MCP Server with Entra ID authentication"
+    },
+    "snowflake-mcp": {
+      "url": "http://localhost:8003",
+      "headers": {
+        "Authorization": "Bearer ${MCP_API_KEY}"
+      },
+      "description": "Snowflake MCP Server for data warehouse queries"
+    },
+    "hana-mcp": {
+      "url": "http://localhost:8004",
+      "headers": {
+        "Authorization": "Bearer ${MCP_API_KEY}"
+      },
+      "description": "SAP HANA MCP Server for analytics"
+    },
+    "postgres-mcp": {
+      "url": "http://localhost:8005",
+      "headers": {
+        "Authorization": "Bearer ${MCP_API_KEY}"
+      },
+      "description": "PostgreSQL MCP Server"
+    }
+  }
+}
