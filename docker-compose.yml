@@ -1,0 +1,293 @@
+version: '3.8'
+
+# =============================================================================
+# MCP SQL PaaS Universal - Docker Compose Configuration
+# =============================================================================
+# Launch database-specific MCP servers as containers
+#
+# Usage:
+#   docker-compose up -d mcp-sqlserver    # SQL Server MCP
+#   docker-compose up -d mcp-azure        # Azure SQL MCP
+#   docker-compose up -d mcp-snowflake    # Snowflake MCP
+#   docker-compose up -d mcp-hana         # SAP HANA MCP
+#   docker-compose up -d mcp-postgres     # PostgreSQL MCP
+#   docker-compose up -d --scale mcp-sqlserver=3  # Scale horizontally
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # SQL Server MCP Server
+  # ---------------------------------------------------------------------------
+  mcp-sqlserver:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.sqlserver
+    container_name: mcp-sqlserver
+    restart: unless-stopped
+    environment:
+      - MCP_SERVER_NAME=mcp-sqlserver
+      - MCP_LOG_LEVEL=${MCP_LOG_LEVEL:-INFO}
+      - MCP_TIMEOUT_SECONDS=${MCP_TIMEOUT_SECONDS:-120}
+      - MCP_CONNECTION_POOL_SIZE=${MCP_CONNECTION_POOL_SIZE:-10}
+      - SQLSERVER_HOST=${SQLSERVER_HOST}
+      - SQLSERVER_PORT=${SQLSERVER_PORT:-1433}
+      - SQLSERVER_DATABASE=${SQLSERVER_DATABASE}
+      - SQLSERVER_USER=${SQLSERVER_USER}
+      - SQLSERVER_PASSWORD=${SQLSERVER_PASSWORD}
+      - SQLSERVER_MODE=${SQLSERVER_MODE:-database}
+      - SQLSERVER_ENCRYPT=${SQLSERVER_ENCRYPT:-true}
+    ports:
+      - "${MCP_SQLSERVER_PORT:-8001}:8000"
+    volumes:
+      - ./logs:/var/log/mcp
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # ---------------------------------------------------------------------------
+  # Azure SQL Database MCP Server
+  # ---------------------------------------------------------------------------
+  mcp-azure:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.azure
+    container_name: mcp-azure
+    restart: unless-stopped
+    environment:
+      - MCP_SERVER_NAME=mcp-azure-sql
+      - MCP_LOG_LEVEL=${MCP_LOG_LEVEL:-INFO}
+      - MCP_TIMEOUT_SECONDS=${MCP_TIMEOUT_SECONDS:-120}
+      - MCP_CONNECTION_POOL_SIZE=${MCP_CONNECTION_POOL_SIZE:-10}
+      - AZURE_SQL_SERVER=${AZURE_SQL_SERVER}
+      - AZURE_SQL_DATABASE=${AZURE_SQL_DATABASE}
+      - AZURE_SQL_AUTH_METHOD=${AZURE_SQL_AUTH_METHOD:-sql}
+      - AZURE_SQL_USER=${AZURE_SQL_USER}
+      - AZURE_SQL_PASSWORD=${AZURE_SQL_PASSWORD}
+      - AZURE_SQL_TENANT_ID=${AZURE_SQL_TENANT_ID}
+      - AZURE_SQL_CLIENT_ID=${AZURE_SQL_CLIENT_ID}
+      - AZURE_SQL_CLIENT_SECRET=${AZURE_SQL_CLIENT_SECRET}
+      - AZURE_SQL_USE_READ_REPLICA=${AZURE_SQL_USE_READ_REPLICA:-false}
+    ports:
+      - "${MCP_AZURE_PORT:-8002}:8000"
+    volumes:
+      - ./logs:/var/log/mcp
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # ---------------------------------------------------------------------------
+  # Snowflake MCP Server
+  # ---------------------------------------------------------------------------
+  mcp-snowflake:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.snowflake
+    container_name: mcp-snowflake
+    restart: unless-stopped
+    environment:
+      - MCP_SERVER_NAME=mcp-snowflake
+      - MCP_LOG_LEVEL=${MCP_LOG_LEVEL:-INFO}
+      - MCP_TIMEOUT_SECONDS=${MCP_TIMEOUT_SECONDS:-120}
+      - MCP_CONNECTION_POOL_SIZE=${MCP_CONNECTION_POOL_SIZE:-10}
+      - SNOWFLAKE_ACCOUNT_URL=${SNOWFLAKE_ACCOUNT_URL}
+      - SNOWFLAKE_ACCOUNT=${SNOWFLAKE_ACCOUNT}
+      - SNOWFLAKE_USER=${SNOWFLAKE_USER}
+      - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
+      - SNOWFLAKE_WAREHOUSE=${SNOWFLAKE_WAREHOUSE}
+      - SNOWFLAKE_DATABASE=${SNOWFLAKE_DATABASE}
+      - SNOWFLAKE_SCHEMA=${SNOWFLAKE_SCHEMA:-PUBLIC}
+      - SNOWFLAKE_ROLE=${SNOWFLAKE_ROLE:-PUBLIC}
+      - SNOWFLAKE_AUTH_METHOD=${SNOWFLAKE_AUTH_METHOD:-password}
+      - SNOWFLAKE_PAT=${SNOWFLAKE_PAT}
+    ports:
+      - "${MCP_SNOWFLAKE_PORT:-8003}:8000"
+    volumes:
+      - ./logs:/var/log/mcp
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # ---------------------------------------------------------------------------
+  # SAP HANA MCP Server
+  # ---------------------------------------------------------------------------
+  mcp-hana:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.hana
+    container_name: mcp-hana
+    restart: unless-stopped
+    environment:
+      - MCP_SERVER_NAME=mcp-sap-hana
+      - MCP_LOG_LEVEL=${MCP_LOG_LEVEL:-INFO}
+      - MCP_TIMEOUT_SECONDS=${MCP_TIMEOUT_SECONDS:-120}
+      - MCP_CONNECTION_POOL_SIZE=${MCP_CONNECTION_POOL_SIZE:-10}
+      - HANA_CONNECTION_TYPE=${HANA_CONNECTION_TYPE:-single}
+      - HANA_HOST=${HANA_HOST}
+      - HANA_PORT=${HANA_PORT:-30015}
+      - HANA_USER=${HANA_USER}
+      - HANA_PASSWORD=${HANA_PASSWORD}
+      - HANA_INSTANCE_NUMBER=${HANA_INSTANCE_NUMBER}
+      - HANA_DATABASE_NAME=${HANA_DATABASE_NAME}
+      - HANA_SCHEMA=${HANA_SCHEMA}
+      - HANA_SSL_ENABLED=${HANA_SSL_ENABLED:-true}
+    ports:
+      - "${MCP_HANA_PORT:-8004}:8000"
+    volumes:
+      - ./logs:/var/log/mcp
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL MCP Server
+  # ---------------------------------------------------------------------------
+  mcp-postgres:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.postgres
+    container_name: mcp-postgres
+    restart: unless-stopped
+    environment:
+      - MCP_SERVER_NAME=mcp-postgres
+      - MCP_LOG_LEVEL=${MCP_LOG_LEVEL:-INFO}
+      - MCP_TIMEOUT_SECONDS=${MCP_TIMEOUT_SECONDS:-120}
+      - MCP_CONNECTION_POOL_SIZE=${MCP_CONNECTION_POOL_SIZE:-10}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_SCHEMA=${POSTGRES_SCHEMA:-public}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE:-prefer}
+      - AZURE_POSTGRES_USE_ENTRA_ID=${AZURE_POSTGRES_USE_ENTRA_ID:-false}
+    ports:
+      - "${MCP_POSTGRES_PORT:-8005}:8000"
+    volumes:
+      - ./logs:/var/log/mcp
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # ---------------------------------------------------------------------------
+  # ERP-Specific MCP Servers
+  # ---------------------------------------------------------------------------
+  
+  # Microsoft Dynamics 365 MCP Server
+  mcp-dynamics365:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.azure
+    container_name: mcp-dynamics365
+    restart: unless-stopped
+    environment:
+      - MCP_SERVER_NAME=mcp-dynamics365
+      - MCP_LOG_LEVEL=${MCP_LOG_LEVEL:-INFO}
+      - AZURE_SQL_SERVER=${DYNAMICS365_SQL_SERVER}
+      - AZURE_SQL_DATABASE=${DYNAMICS365_SQL_DATABASE}
+      - AZURE_SQL_AUTH_METHOD=entra_id_service_principal
+      - AZURE_SQL_TENANT_ID=${DYNAMICS365_TENANT_ID}
+      - AZURE_SQL_CLIENT_ID=${DYNAMICS365_CLIENT_ID}
+      - AZURE_SQL_CLIENT_SECRET=${DYNAMICS365_CLIENT_SECRET}
+      - ERP_TYPE=dynamics365
+      - DYNAMICS365_ENVIRONMENT_URL=${DYNAMICS365_ENVIRONMENT_URL}
+    ports:
+      - "${MCP_DYNAMICS365_PORT:-8010}:8000"
+    volumes:
+      - ./logs:/var/log/mcp
+      - ./config:/app/config:ro
+    networks:
+      - mcp-network
+
+  # SAP S/4HANA MCP Server
+  mcp-sap-s4hana:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.hana
+    container_name: mcp-sap-s4hana
+    restart: unless-stopped
+    environment:
+      - MCP_SERVER_NAME=mcp-sap-s4hana
+      - MCP_LOG_LEVEL=${MCP_LOG_LEVEL:-INFO}
+      - HANA_CONNECTION_TYPE=${SAP_S4HANA_CONNECTION_TYPE:-mdc_tenant}
+      - HANA_HOST=${SAP_S4HANA_HOST}
+      - HANA_PORT=${SAP_S4HANA_PORT}
+      - HANA_USER=${SAP_S4HANA_USER}
+      - HANA_PASSWORD=${SAP_S4HANA_PASSWORD}
+      - HANA_DATABASE_NAME=${SAP_S4HANA_DATABASE}
+      - HANA_INSTANCE_NUMBER=${SAP_S4HANA_INSTANCE}
+      - ERP_TYPE=sap_s4hana
+      - SAP_S4HANA_SYSTEM_ID=${SAP_S4HANA_SYSTEM_ID}
+      - SAP_S4HANA_CLIENT=${SAP_S4HANA_CLIENT}
+    ports:
+      - "${MCP_SAP_S4HANA_PORT:-8011}:8000"
+    volumes:
+      - ./logs:/var/log/mcp
+      - ./config:/app/config:ro
+    networks:
+      - mcp-network
+
+  # ---------------------------------------------------------------------------
+  # Redis Cache (Optional - for multi-instance caching)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: mcp-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - mcp-network
+
+  # ---------------------------------------------------------------------------
+  # Prometheus Metrics (Optional - for monitoring)
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: mcp-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  prometheus-data:
