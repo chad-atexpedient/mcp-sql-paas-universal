@@ -1,0 +1,94 @@
+# =============================================================================
+# SAP S/4HANA MCP Configuration
+# =============================================================================
+# ERP-specific configuration for SAP S/4HANA
+# Uses SAP HANA MDC tenant database
+# =============================================================================
+
+server:
+  name: mcp-sap-s4hana
+  timeout_seconds: 120
+  pool_size: 10
+  read_only: true
+  erp_type: sap_s4hana
+
+# SAP HANA connection
+connection:
+  type: sap_hana
+  connection_type: mdc_tenant  # Use MDC tenant for S/4HANA
+  
+  host: ${SAP_S4HANA_HOST}
+  port: ${SAP_S4HANA_PORT:30015}
+  instance_number: ${SAP_S4HANA_INSTANCE:00}
+  database_name: ${SAP_S4HANA_DATABASE}
+  
+  user: ${SAP_S4HANA_USER}
+  # password via env var
+  
+  ssl_enabled: true
+  ssl_validate_cert: true
+
+# SAP S/4HANA specific settings
+sap_s4hana:
+  system_id: ${SAP_S4HANA_SYSTEM_ID}
+  client: ${SAP_S4HANA_CLIENT:100}
+  
+  # Enable OData service access
+  use_odata: true
+  odata_url: ${SAP_S4HANA_ODATA_URL}
+  
+  # Common S/4HANA schemas to access
+  schemas:
+    - SAPHANADB
+    - SAP${SAP_S4HANA_SYSTEM_ID}
+    
+  # CDS View patterns to expose
+  cds_views:
+    - I_*                    # Standard analytical views
+    - C_*                    # Consumption views
+    - ZZ_*                   # Custom views (Z namespace)
+    
+  # Core business modules
+  modules:
+    - FI                     # Finance
+    - CO                     # Controlling
+    - SD                     # Sales & Distribution
+    - MM                     # Materials Management
+    - PP                     # Production Planning
+    - WM                     # Warehouse Management
+
+security:
+  # SAP system tables to block
+  blocked_tables:
+    - USR02                  # User passwords
+    - USR04                  # User authorizations
+    - RSECACTPROT           # Authorization check logs
+    
+  sensitive_columns:
+    - BCODE                  # Password hash
+    - CODVN                  # Password version
+    - USTYP                  # User type
+    
+  # Only allow access to reporting schemas
+  allowed_schemas:
+    - SAPHANADB
+    - ${SAP_S4HANA_DATABASE}_RPT
+
+logging:
+  level: INFO
+  file: /var/log/mcp/sap_s4hana.log
+  audit_queries: true
+
+# SAP-specific tools
+tools:
+  # Enable calculation view queries
+  calculation_views: true
+  
+  # Enable CDS view exploration
+  cds_views: true
+  
+  # Enable financial reporting
+  financial_reports: true
+  
+  # Enable material/inventory queries
+  inventory_queries: true
