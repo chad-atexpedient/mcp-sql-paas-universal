@@ -1,0 +1,73 @@
+# =============================================================================
+# MCP SQL PaaS Universal - Python Dependencies
+# =============================================================================
+
+# Core MCP Framework
+mcp[cli]>=1.0.0
+httpx>=0.27.0
+
+# Database Drivers
+# SQL Server / Azure SQL
+pyodbc>=5.1.0
+pymssql>=2.3.0
+
+# PostgreSQL
+psycopg2-binary>=2.9.9
+asyncpg>=0.29.0
+
+# MySQL
+mysql-connector-python>=8.3.0
+pymysql>=1.1.0
+
+# Oracle
+oracledb>=2.0.0
+
+# Snowflake
+snowflake-connector-python>=3.7.0
+snowflake-snowpark-python>=1.14.0
+
+# SAP HANA
+hdbcli>=2.19.0
+
+# Async Support
+aiohttp>=3.9.0
+aiomysql>=0.2.0
+
+# Configuration
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+python-dotenv>=1.0.1
+pyyaml>=6.0.1
+
+# Connection Pooling
+sqlalchemy>=2.0.0
+
+# Caching
+redis>=5.0.0
+cachetools>=5.3.0
+
+# Security
+cryptography>=42.0.0
+python-jose[cryptography]>=3.3.0
+
+# Logging and Monitoring
+structlog>=24.1.0
+prometheus-client>=0.20.0
+opentelemetry-api>=1.23.0
+opentelemetry-sdk>=1.23.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
+
+# Development
+black>=24.2.0
+ruff>=0.2.0
+mypy>=1.8.0
+pre-commit>=3.6.0
+
+# ERP Integration Support
+zeep>=4.2.1                    # SOAP client for SAP
+msal>=1.26.0                   # Microsoft authentication
+requests-oauthlib>=1.3.1       # OAuth for various ERPs
