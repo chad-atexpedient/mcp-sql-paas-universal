@@ -1,0 +1,86 @@
+# =============================================================================
+# Microsoft Dynamics 365 MCP Configuration
+# =============================================================================
+# ERP-specific configuration for Dynamics 365
+# Uses Azure SQL Database as backend with Dataverse integration
+# =============================================================================
+
+server:
+  name: mcp-dynamics365
+  timeout_seconds: 120
+  pool_size: 10
+  read_only: true
+  erp_type: dynamics365
+
+# Azure SQL connection (Dynamics 365 database)
+connection:
+  type: azure_sql
+  server: ${DYNAMICS365_SQL_SERVER}
+  database: ${DYNAMICS365_SQL_DATABASE}
+  
+  # Always use Entra ID for Dynamics 365
+  auth_method: entra_id_service_principal
+  tenant_id: ${DYNAMICS365_TENANT_ID}
+  client_id: ${DYNAMICS365_CLIENT_ID}
+  # client_secret via env var
+  
+  encrypt: true
+  use_read_replica: true
+
+# Dynamics 365 specific settings
+dynamics365:
+  environment_url: ${DYNAMICS365_ENVIRONMENT_URL}
+  use_dataverse: true
+  
+  # Common Dynamics 365 entities to expose
+  entities:
+    - account
+    - contact
+    - lead
+    - opportunity
+    - salesorder
+    - invoice
+    - product
+    - pricelevel
+    
+  # Entity name mappings (Dataverse table names)
+  table_mappings:
+    accounts: account
+    contacts: contact
+    leads: lead
+    opportunities: opportunity
+    orders: salesorder
+    invoices: invoice
+    products: product
+    price_lists: pricelevel
+
+security:
+  # Dynamics 365 system tables to block
+  blocked_tables:
+    - systemuser
+    - team
+    - role
+    - principalobjectaccess
+    - audit
+    
+  sensitive_columns:
+    - password
+    - ownerid
+    - createdby
+    - modifiedby
+
+logging:
+  level: INFO
+  file: /var/log/mcp/dynamics365.log
+  audit_queries: true
+
+# Dynamics 365 specific tools
+tools:
+  # Enable CRM-specific queries
+  crm_queries: true
+  
+  # Enable sales pipeline analysis
+  sales_pipeline: true
+  
+  # Enable customer 360 views
+  customer_360: true
