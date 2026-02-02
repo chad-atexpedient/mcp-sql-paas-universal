@@ -5,6 +5,7 @@ A comprehensive **Model Context Protocol (MCP)** server framework supporting mul
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/mcp-sql-universal?referralCode=expedient)
 
 ## 📋 Overview
 
@@ -56,7 +57,17 @@ This framework provides launchable MCP servers for various SQL databases and ERP
 
 ## 🚀 Quick Start
 
-### Using Docker (Recommended)
+### 🚂 Deploy to Railway (Fastest)
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/mcp-sql-universal)
+
+1. Click the button above
+2. Configure your database credentials as environment variables
+3. Deploy! 🎉
+
+**See:** [Railway Deployment Guide](RAILWAY_DEPLOYMENT.md) for detailed instructions.
+
+### Using Docker (Recommended for Local Development)
 
 ```bash
 # Clone the repository
@@ -99,6 +110,16 @@ uv pip install -r requirements.txt
 # Run specific adapter
 uv run src/servers/sqlserver_server.py
 ```
+
+## 🌐 Deployment Options
+
+| Platform | Status | Guide | Est. Cost |
+|----------|--------|-------|-----------|
+| **Railway** | ✅ Ready | [Guide](RAILWAY_DEPLOYMENT.md) | $5-20/mo |
+| **Docker** | ✅ Ready | [docker-compose.yml](docker-compose.yml) | Free (local) |
+| **Azure Container Instances** | 🔄 Coming Soon | - | $10-30/mo |
+| **AWS ECS** | 🔄 Coming Soon | - | $15-40/mo |
+| **Google Cloud Run** | 🔄 Coming Soon | - | $5-25/mo |
 
 ## 📁 Project Structure
 
@@ -146,6 +167,8 @@ mcp-sql-paas-universal/
 │   ├── Dockerfile.snowflake
 │   ├── Dockerfile.hana
 │   └── Dockerfile.postgres
+├── Dockerfile                   # Railway deployment
+├── railway.toml                 # Railway configuration
 ├── docker-compose.yml
 ├── .env.template
 ├── requirements.txt
@@ -166,6 +189,7 @@ This framework implements industry best practices for MCP security:
 
 ## 📖 Documentation
 
+- [🚂 Railway Deployment](RAILWAY_DEPLOYMENT.md) - **Deploy in 5 minutes**
 - [SQL Server Configuration](docs/sqlserver.md)
 - [Azure SQL Configuration](docs/azure-sql.md)
 - [Snowflake Configuration](docs/snowflake.md)
@@ -187,3 +211,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Model Context Protocol](https://modelcontextprotocol.io/) by Anthropic
 - [mssqlclient-mcp-server](https://github.com/aadversteeg/mssqlclient-mcp-server)
 - [SAP HANA MCP Server](https://github.com/HatriGt/hana-mcp-server)
+
+---
+
+**🚀 Ready to deploy?** [Click here to deploy to Railway now!](https://railway.app/template/mcp-sql-universal)
