@@ -1,0 +1,65 @@
+# Railway deployment ignore file
+# Files and directories to exclude from Railway deployment
+
+# Development files
+*.md
+!README.md
+!RAILWAY_DEPLOYMENT.md
+CONTRIBUTING.md
+
+# Documentation
+docs/
+examples/
+
+# Tests
+tests/
+*.test.py
+*.spec.py
+
+# Development configs
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.code-workspace
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD (not needed for Railway deployment)
+.github/
+.gitlab-ci.yml
+
+# Docker files (Railway builds its own)
+docker-compose.yml
+docker-compose.*.yml
+docker/Dockerfile.*
+!Dockerfile
+
+# Logs
+logs/
+*.log
+
+# Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Jupyter Notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
